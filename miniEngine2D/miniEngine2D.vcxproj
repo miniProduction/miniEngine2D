@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="MiniEngine2D.h" />
     <ClInclude Include="Trace.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MiniEngine2D.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Trace.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

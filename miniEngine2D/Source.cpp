@@ -17,6 +17,8 @@ int main()
 	miniEngine.log(u8"中文测试:%d %c %.2f", 123, 'c', 2.5);
 	MACRO_Log("中文测试: %d %c %.2f", 123, 'c', 2.5);
 
+	miniEngine.showWindow();
+
 	//u8"中文测试:%d %c %.2f"u8"中文";
 
 	return 0;

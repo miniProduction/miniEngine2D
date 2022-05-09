@@ -1,13 +1,19 @@
 ﻿#include "MiniEngine2D.h"
+#include<Windows.h>
+
+
+
+
+
 
 MiniEngine2D::MiniEngine2D()
 {
+
 }
 
 MiniEngine2D::~MiniEngine2D()
 {
 }
-
 int __cdecl MiniEngine2D::log(char const* const _Format, ...)
 {
 	//创建日志信息头
