@@ -1,3 +1,15 @@
 #pragma once
-LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-extern HWND hwnd;
+void showWindow();
+
+struct Color
+{
+	char r, g, b, a;
+};
+
+
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
+
+Color BUFFER[SCREEN_HEIGHT* SCREEN_WIDTH];
+
+
