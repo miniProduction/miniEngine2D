@@ -1,12 +1,18 @@
 #include<Windows.h>
 #include"Graphics.h"
 
-
+const int bits = 32; 
 bool full_screen_ = false;
 HWND hwnd;
 DWORD last_style;
 RECT last_rect;
+HDC screen_hdc;
+HDC hCompatibleDC;
+HBITMAP hCompatibleBitmap;
+HBITMAP hOldBitmap;
+BITMAPINFO binfo;
 
+Color BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
 
 
 void RestoreFullScreen() {
@@ -54,10 +60,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-
-
+/// <summary>
+/// 初始化并显示窗口
+/// </summary>
 void showWindow()
 {
+    for (int i = 0; i < SCREEN_HEIGHT; i++)
+    {
+        for (int j = 0; j < SCREEN_WIDTH; j++)
+        {
+            BUFFER[i * SCREEN_WIDTH + j].r = 0;
+            BUFFER[i * SCREEN_WIDTH + j].g = 0;
+            BUFFER[i * SCREEN_WIDTH + j].b = 0;
+
+        }
+    }
+
     HINSTANCE hInstance = GetModuleHandle(0);
     WNDCLASS wndcls;
     wndcls.cbClsExtra = 0;
@@ -71,3 +89,56 @@ void showWindow()
     wndcls.lpszMenuName = NULL;
     wndcls.style = CS_HREDRAW | CS_VREDRAW;
 
+    RegisterClass(&wndcls);
+    hwnd = CreateWindow(L"miniEngine2D", L"miniEngine2D", WS_OVERLAPPEDWINDOW,
+        0, 0, 1280, 720, NULL, NULL, hInstance, NULL);
+    ShowWindow(hwnd, SW_SHOWNORMAL);
+    UpdateWindow(hwnd);
+
+    ZeroMemory(&binfo, sizeof(BITMAPINFO));
+    binfo.bmiHeader.biBitCount = bits;
+    binfo.bmiHeader.biCompression = BI_RGB;
+    binfo.bmiHeader.biHeight = -SCREEN_HEIGHT;
+    binfo.bmiHeader.biPlanes = 1;
+    binfo.bmiHeader.biSizeImage = 0;
+    binfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    binfo.bmiHeader.biWidth = SCREEN_WIDTH;
+
+    screen_hdc = GetDC(hwnd);
+    hCompatibleDC = CreateCompatibleDC(screen_hdc);
+    hCompatibleBitmap = CreateCompatibleBitmap(screen_hdc, SCREEN_WIDTH, SCREEN_HEIGHT);
+    hOldBitmap = (HBITMAP)SelectObject(hCompatibleDC, hCompatibleBitmap);
+}
+
+void update()
+{
+    MSG msg;
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+    putBufferToScreen();
+}
+
+void putBufferToScreen()
+{
+    SetDIBits(screen_hdc, hCompatibleBitmap, 0, SCREEN_HEIGHT, BUFFER, (BITMAPINFO*)&binfo, DIB_RGB_COLORS);
+    BitBlt(screen_hdc, -1, -1, SCREEN_WIDTH, SCREEN_HEIGHT, hCompatibleDC, 0, 0, SRCCOPY);
+}
+
+void clearScreen()
+{
+
+    for (int i = 0; i < SCREEN_HEIGHT; i++)
+    {
+        for (int j = 0; j < SCREEN_WIDTH; j++)
+        {
+            //测试颜色:YANAGIZOME
+            BUFFER[i * SCREEN_WIDTH + j].r = 145;
+            BUFFER[i * SCREEN_WIDTH + j].g = 173;
+            BUFFER[i * SCREEN_WIDTH + j].b = 112;
+
+        }
+    }
+}

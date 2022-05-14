@@ -9,6 +9,8 @@ public:
 	void showWindow();
 
 	void gameLoop();
+	void update();
+	void clearScreen();
 	
 
 	static int __cdecl log(char const* const _Format, ...);

@@ -75,3 +75,14 @@ void MiniEngine2D::showWindow()
 {
 	::showWindow();
 }//}
+
+
+void MiniEngine2D::update()
+{
+	::update();
+}
+
+void MiniEngine2D::clearScreen()
+{
+	::clearScreen();
+}

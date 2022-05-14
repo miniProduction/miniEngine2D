@@ -18,15 +18,24 @@ int main()
 	cout << "中文测试" << endl;
 	wcout << L"中文测试" << endl;
 
-	MiniEngine2D miniEngine;
+	MiniEngine2D m;
 	MiniEngine2D::log("中文测试:%d %c %.2f", 123, 'c', 2.5);
-	miniEngine.log(L"中文测试:%d %c %.2f", 123, 'c', 2.5);
+	m.log(L"中文测试:%d %c %.2f", 123, 'c', 2.5);
 
 	MACRO_Log(TEXT("中文测试: %d %c %.2f"), 123, 'c', 2.5);
 	MACRO_LogA("中文测试: %d %c %.2f", 123, 'c', 2.5);
 	MACRO_LogW(L"中文测试: %d %c %.2f", 123, 'c', 2.5);
 
-	miniEngine.showWindow();
+	m.showWindow();
+
+	bool isGameOver = false;
+
+	while (!isGameOver) {
+		m.clearScreen();
+
+
+		m.update();
+	}
 
 	system("pause");
 	return 0;

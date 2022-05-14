@@ -3,13 +3,17 @@ void showWindow();
 
 struct Color
 {
-	char r, g, b, a;
+	char b, g, r, a;
 };
 
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 
-Color BUFFER[SCREEN_HEIGHT* SCREEN_WIDTH];
+extern Color BUFFER[SCREEN_HEIGHT* SCREEN_WIDTH];
 
+void update();
 
+void putBufferToScreen();
+
+void clearScreen();
