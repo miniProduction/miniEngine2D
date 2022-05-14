@@ -1,7 +1,7 @@
 #pragma once
 void showWindow();
 
-struct Color
+struct MiniColor
 {
 	char b, g, r, a;
 };
@@ -10,7 +10,13 @@ struct Color
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 
-extern Color BUFFER[SCREEN_HEIGHT* SCREEN_WIDTH];
+extern MiniColor BUFFER[SCREEN_HEIGHT* SCREEN_WIDTH];
+
+struct MiniImage
+{
+	int height, width;
+	MiniColor* _data;
+};
 
 void update();
 

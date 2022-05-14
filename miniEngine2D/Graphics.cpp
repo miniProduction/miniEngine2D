@@ -12,7 +12,7 @@ HBITMAP hCompatibleBitmap;
 HBITMAP hOldBitmap;
 BITMAPINFO binfo;
 
-Color BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
+MiniColor BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
 
 
 void RestoreFullScreen() {
