@@ -56,33 +56,4 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 
-void MiniEngine2D::showWindow()
-{
-    HINSTANCE hInstance = GetModuleHandle(0);
-    WNDCLASS wndcls;
-    wndcls.cbClsExtra = 0;
-    wndcls.cbWndExtra = 0;
-    wndcls.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    wndcls.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wndcls.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    wndcls.hInstance = hInstance;
-    wndcls.lpfnWndProc = WndProc;
-    wndcls.lpszClassName = L"miniEngine2D";
-    wndcls.lpszMenuName = NULL;
-    wndcls.style = CS_HREDRAW | CS_VREDRAW;
 
-    RegisterClass(&wndcls);
-    hwnd = CreateWindow(L"miniEngine2D", L"miniEngine2D", WS_OVERLAPPEDWINDOW,
-        0, 0, 1280, 720, NULL, NULL, hInstance, NULL);
-    ShowWindow(hwnd, SW_SHOWNORMAL);
-    UpdateWindow(hwnd);
-
-    MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-
-}

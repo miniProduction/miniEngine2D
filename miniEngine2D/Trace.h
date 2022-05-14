@@ -1,4 +1,15 @@
 ﻿#pragma once
+/*
+Feature list
+1、控制台窗口输出调试信息			√
+2、调试窗口、ViewDbg输出调试信息	√
+3、保存调试记录到文件				
+4、提供宏定义方式的调试接口		√
+5、提供函数方式的调试接口			
+6、提供从控制台窗口的输入			
+7、...
+*/
+
 #include <Windows.h>
 #include <string>
 
@@ -19,6 +30,7 @@ int __cdecl DebugPrintlnW(wchar_t const* const _Format, ...);
 
 int __cdecl FunctionDebugPrintlnA(char const* const _Format, char const* const _Info, va_list _ArgList);
 int __cdecl FunctionDebugPrintlnW(wchar_t const* const _Format, wchar_t const* const _Info, va_list _ArgList);
+int __cdecl FunctionDebugPrintlnA(char const* const _Format, va_list _ArgList);
 
 #ifdef UNICODE
 #define MACRO_Log MACRO_LogW
