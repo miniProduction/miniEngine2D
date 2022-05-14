@@ -1,5 +1,4 @@
 #include<Windows.h>
-#include"MiniEngine2D.h"
 #include"Graphics.h"
 
 
@@ -9,19 +8,20 @@ DWORD last_style;
 RECT last_rect;
 
 
+
 void RestoreFullScreen() {
-    SetWindowLong(hwnd, GWL_STYLE, last_style); // »Ö¸´×î´ó»¯Ö®Ç°µÄ´°¿Ú·ç¸ñ
-    SetWindowPos(hwnd, NULL, last_rect.left, last_rect.top, last_rect.right - last_rect.left, last_rect.bottom - last_rect.top, NULL); // »Ö¸´×î´ó»¯Ö®Ç°µÄ´°¿ÚÎ»ÖÃºÍ´óĞ¡
+    SetWindowLong(hwnd, GWL_STYLE, last_style); // æ¢å¤æœ€å¤§åŒ–ä¹‹å‰çš„çª—å£é£æ ¼
+    SetWindowPos(hwnd, NULL, last_rect.left, last_rect.top, last_rect.right - last_rect.left, last_rect.bottom - last_rect.top, NULL); // æ¢å¤æœ€å¤§åŒ–ä¹‹å‰çš„çª—å£ä½ç½®å’Œå¤§å°
     full_screen_ = false;
 }
 
 void FullScreen() {
-    last_style = GetWindowLong(hwnd, GWL_STYLE); //´æ´¢ÉÏ´ÎµÄ´°¿Ú·ç¸ñ
-    GetWindowRect(hwnd, &last_rect);             //´æ´¢ÉÏ´ÎµÄ´°¿ÚÎ»ÖÃºÍ´óĞ¡
+    last_style = GetWindowLong(hwnd, GWL_STYLE); //å­˜å‚¨ä¸Šæ¬¡çš„çª—å£é£æ ¼
+    GetWindowRect(hwnd, &last_rect);             //å­˜å‚¨ä¸Šæ¬¡çš„çª—å£ä½ç½®å’Œå¤§å°
     int w = GetSystemMetrics(SM_CXSCREEN);
-    int h = GetSystemMetrics(SM_CYSCREEN);       // »ñÈ¡×î´ó»¯µÄ´°¿Ú´óĞ¡
-    SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP); // È¥µô±êÌâÀ¸
-    SetWindowPos(hwnd, NULL, 0, 0, w, h, SWP_FRAMECHANGED); // ÉèÖÃÎ»ÖÃºÍ´óĞ¡
+    int h = GetSystemMetrics(SM_CYSCREEN);       // è·å–æœ€å¤§åŒ–çš„çª—å£å¤§å°
+    SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP); // å»æ‰æ ‡é¢˜æ 
+    SetWindowPos(hwnd, NULL, 0, 0, w, h, SWP_FRAMECHANGED); // è®¾ç½®ä½ç½®å’Œå¤§å°
     full_screen_ = true;
 }
 
@@ -33,7 +33,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     case WM_PAINT:
         break;
     case WM_CLOSE:
-        DestroyWindow(hwnd);  //Ïú»Ù´°¿Ú
+        DestroyWindow(hwnd);  //é”€æ¯çª—å£
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -56,7 +56,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
 
-void MiniEngine2D::showWindow()
+void showWindow()
 {
     HINSTANCE hInstance = GetModuleHandle(0);
     WNDCLASS wndcls;

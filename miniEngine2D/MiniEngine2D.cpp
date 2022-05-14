@@ -1,7 +1,6 @@
 ﻿#include "MiniEngine2D.h"
+#include"Graphics.h"
 #include<Windows.h>
-
-
 
 
 
@@ -49,3 +48,9 @@ MiniEngine2D::~MiniEngine2D()
 //	delete[] _Buffer;
 //	return result;
 //}
+
+
+void MiniEngine2D::showWindow()
+{
+	::showWindow();
+}

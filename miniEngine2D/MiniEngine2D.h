@@ -6,6 +6,8 @@ public:
 	MiniEngine2D();
 	~MiniEngine2D();
 	void showWindow();
+
+	void gameLoop();
 	
 
 	inline static int __cdecl log(char const* const _Format, ...) {
