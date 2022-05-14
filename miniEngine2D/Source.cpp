@@ -30,9 +30,18 @@ int main()
 
 	bool isGameOver = false;
 
+	MiniColor black, MIZUASAGI;
+	black.r = 0; black.g = 0; black.b = 0;
+	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183;
+
 	while (!isGameOver) {
 		m.clearScreen();
 
+		//测试基础的绘制图像函数
+		m.drawPoint(50, 50, black);
+		m.drawLine(0, 0, 100, 300, black);
+		m.drawRect(1000, 500, 100, 100, black);
+		m.drawCircle(500, 500, 50, black);
 
 		m.update();
 	}

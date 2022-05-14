@@ -1,5 +1,9 @@
+#define _USE_MATH_DEFINES 
 #include<Windows.h>
 #include"Graphics.h"
+
+
+
 
 const int bits = 32; 
 bool full_screen_ = false;
@@ -13,6 +17,11 @@ HBITMAP hOldBitmap;
 BITMAPINFO binfo;
 
 MiniColor BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
+
+double DecToRad(double ang)
+{
+    return ang * M_PI / 180.0;
+}
 
 
 void RestoreFullScreen() {
@@ -141,4 +150,84 @@ void clearScreen()
 
         }
     }
+}
+
+void drawPoint(int x, int y, const MiniColor&c)
+{
+    BUFFER[y * SCREEN_WIDTH + x] = c;
+}
+
+void drawLine(int x0, int y0, int x1, int y1, const MiniColor&c)
+{
+
+    if (x0 > x1)
+    {
+        int temp = x0;
+        x0 = x1;
+        x1 = temp;
+        temp = y0;
+        y0 = y1;
+        y1 = temp;
+    }
+    int dy = y1 - y0;
+    int dx = x1 - x0;
+    double k = (double)dy / (double)dx;
+
+    if (abs(k) > 1)
+    {
+        double _k = 1 / k;
+        if (y1 > y0) {
+            for (int y = y0; y < y1; y++)
+            {
+                int nowX = x0 + _k * (y - y0);
+                drawPoint(nowX, y, c);
+            }
+        }
+        else {
+            for (int y = y1; y < y0; y++)
+            {
+                int nowX = x1 + _k * (y - y1);
+                drawPoint(nowX, y,c);
+            }
+        }
+
+    }
+    else {
+        for (int x = x0; x < x1; x++)
+        {
+            int nowY = y0 + k * (x - x0);
+            drawPoint(x, nowY,c);
+        }
+    }
+}
+
+
+void drawRect(int x, int y, int width, int height, const MiniColor&c)
+{
+    drawLine(x, y, x + width, y, c);
+    drawLine(x + width, y, x + width, y + height, c);
+    drawLine(x, y, x, y + height, c);
+    drawLine(x, y + height, x + width, y + height, c);
+
+}
+
+void drawCircle(int x, int y, double r, const MiniColor&c)
+{
+    int lastX=x+r, lastY=y;
+
+
+    double stepAng = 0.2;
+    int nowX, nowY;
+
+    for (double nowAng = 0; nowAng < 360; nowAng++)
+    {
+        double angRad = DecToRad(nowAng);
+        nowX = x + cos(angRad) * r;
+        nowY = y - sin(angRad) * r;
+        drawLine(lastX, lastY, nowX, nowY, c);
+        lastX = nowX;
+        lastY = nowY;
+    }
+    drawLine(lastX, lastY, nowX, nowY, c);
+
 }

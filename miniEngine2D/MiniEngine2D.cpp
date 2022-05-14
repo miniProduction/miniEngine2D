@@ -86,3 +86,23 @@ void MiniEngine2D::clearScreen()
 {
 	::clearScreen();
 }
+
+void MiniEngine2D::drawPoint(int x, int y, const MiniColor&c)
+{
+	::drawPoint(x, y, c);
+}
+
+void MiniEngine2D::drawLine(int x0, int y0, int x1, int y1, const MiniColor&c)
+{
+	::drawLine(x0, y0, x1, y1, c);
+}
+
+void MiniEngine2D::drawRect(int x, int y, int width, int height, const MiniColor&c)
+{
+	::drawRect(x, y, width, height, c);
+}
+
+void MiniEngine2D::drawCircle(int x, int y, double r, const MiniColor&c)
+{
+	::drawCircle(x, y, r, c);
+}
