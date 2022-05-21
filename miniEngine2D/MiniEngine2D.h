@@ -6,7 +6,8 @@
 //
 //
 
-#include "Trace.h"
+#include <string>
+
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -43,6 +44,12 @@ public:
 
 	static int __cdecl log(char const* const _Format, ...);
 	static int __cdecl log(wchar_t const* const _Format, ...);
+	static int __cdecl log(int obj);
+	static int __cdecl log(float obj);
+	static int __cdecl log(double obj);
+	static int __cdecl logDetail(char const* const _Format, ...);
+	static int __cdecl logDetail(wchar_t const* const _Format, ...);
+	static void exportLogToFile(const std::string logFilePath);
 private:
 
 

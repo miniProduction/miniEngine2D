@@ -20,18 +20,24 @@ int main()
 	wcout << L"中文测试" << endl;
 
 	MiniEngine2D m;
-	MiniEngine2D::log("中文测试:%d %c %.2f", 123, 'c', 2.5);
+	MiniEngine2D::log("%d", 1234);
+	m.log("中文测试:%d %c %.2f", 123, 'c', 2.5);
 	m.log(L"中文测试:%d %c %.2f", 123, 'c', 2.5);
+	m.log(1234);
+	m.log(12.34f);
+	m.log(56.78);
+	m.logDetail("中文测试:%d %c %.2f", 123, 'c', 2.5);
+	m.logDetail(L"中文测试:%d %c %.2f", 123, 'c', 2.5);
 
-	MACRO_Log(TEXT("中文测试: %d %c %.2f"), 123, 'c', 2.5);
-	MACRO_LogA("中文测试: %d %c %.2f", 123, 'c', 2.5);
-	MACRO_LogW(L"中文测试: %d %c %.2f", 123, 'c', 2.5);
+	//MACRO_Log(TEXT("中文测试: %d %c %.2f"), 123, 'c', 2.5);
+	//MACRO_LogA("中文测试: %d %c %.2f", 123, 'c', 2.5);
+	//MACRO_LogW(L"中文测试: %d %c %.2f", 123, 'c', 2.5);
 
 	m.log("miniColorSize %d\n", sizeof(MiniColor));
 
 	m.showWindow();
 
-	bool isGameOver = false;
+	bool isGameOver = true;
 
 	MiniColor black, MIZUASAGI;
 	black.r = 0; black.g = 0; black.b = 0;
