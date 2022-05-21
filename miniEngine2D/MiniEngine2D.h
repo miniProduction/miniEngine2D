@@ -9,20 +9,22 @@
 #include <string>
 
 
+
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 
 struct MiniColor
 {
-	char b, g, r, a;
+	unsigned char b, g, r, a;
 	MiniColor(int B, int G, int R, int A) :b(B), g(G), r(R), a(A) {};
-	MiniColor() :b(0), g(0), r(0), a(255) {};
+	MiniColor() :b(0), g(0), r(0), a(0) {};
 };
 
 struct MiniImage
 {
 	int height, width;
 	MiniColor* _data;
+	MiniImage() :height(0), width(0), _data(nullptr) {};
 };
 
 
@@ -40,6 +42,8 @@ public:
 	void drawRect(int x, int y, int width, int height, const MiniColor&);
 	void drawCircle(int x, int y, double r, const MiniColor&);
 	void drawImage( int x, int y, const MiniImage&);
+	void setFont(const std::string& fontName, int size);
+	MiniImage makeFontToMiniImage(std::string str, int size);
 	
 
 	static int __cdecl log(char const* const _Format, ...);

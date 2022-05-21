@@ -40,10 +40,15 @@ int main()
 	bool isGameOver = false;
 
 	MiniColor black, MIZUASAGI;
-	black.r = 0; black.g = 0; black.b = 0;
-	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183;
+	black.r = 0; black.g = 0; black.b = 0; black.a = 0;
+	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183; MIZUASAGI.a = 0;
 
 	MiniImage image = makeRectImage(300, 300, MIZUASAGI);
+
+	m.setFont("微软雅黑", 50);
+	m.update();
+
+	MiniImage WordImage= m.makeFontToMiniImage("MiniEngine2D", 50);
 
 	double nowPosX = 0, nowPosY = 400;
 	int fx = 1;
@@ -53,10 +58,11 @@ int main()
 
 		//测试基础的绘制图像函数
 		m.drawPoint(50, 50, black);
-		m.drawLine(0, 0, 100, 300, black);
+		m.drawLine(0, 0, 100, 300, MIZUASAGI);
 		m.drawRect(1000, 500, 100, 100, black);
 		m.drawCircle(500, 500, 50, black);
 		m.drawImage(nowPosX, nowPosY, image);
+		m.drawImage(nowPosX, nowPosY, WordImage);
 		nowPosX += fx*0.5;
 		if (nowPosX > SCREEN_WIDTH - image.width) {
 			fx *= -1;

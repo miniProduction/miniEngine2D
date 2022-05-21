@@ -2,6 +2,7 @@
 #include<Windows.h>
 #include"Graphics.h"
 
+using namespace std;
 
 
 
@@ -15,6 +16,7 @@ HDC hCompatibleDC;
 HBITMAP hCompatibleBitmap;
 HBITMAP hOldBitmap;
 BITMAPINFO binfo;
+HFONT nowFont;
 
 MiniColor BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
 
@@ -117,6 +119,8 @@ void showWindow()
     hCompatibleDC = CreateCompatibleDC(screen_hdc);
     hCompatibleBitmap = CreateCompatibleBitmap(screen_hdc, SCREEN_WIDTH, SCREEN_HEIGHT);
     hOldBitmap = (HBITMAP)SelectObject(hCompatibleDC, hCompatibleBitmap);
+
+
 }
 
 void update()
@@ -155,7 +159,11 @@ void clearScreen()
 void drawPoint(int x, int y, const MiniColor&c)
 {
     if (x<0 || x>SCREEN_WIDTH || y<0 || y>SCREEN_HEIGHT)return;
-    BUFFER[y * SCREEN_WIDTH + x] = c;
+    double _a = static_cast<double>(c.a) / 255.0;
+    double a = 1 - _a;
+    BUFFER[y * SCREEN_WIDTH + x].r = BUFFER[y * SCREEN_WIDTH + x].r * _a + c.r * a;
+    BUFFER[y * SCREEN_WIDTH + x].g = BUFFER[y * SCREEN_WIDTH + x].g * _a + c.g * a;
+    BUFFER[y * SCREEN_WIDTH + x].b = BUFFER[y * SCREEN_WIDTH + x].b * _a + c.b * a;
 }
 
 void drawLine(int x0, int y0, int x1, int y1, const MiniColor&c)
@@ -243,4 +251,90 @@ void drawImage( int x, int y, const MiniImage& img)
  
         }
     }
+}
+
+// 将string转换成wstring
+wstring string2wstring(string str)
+{
+    wstring result;
+    //获取缓冲区大小，并申请空间，缓冲区大小按字符计算  
+    int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), str.size(), NULL, 0);
+    TCHAR* buffer = new TCHAR[len + 1];
+    //多字节编码转换成宽字节编码  
+    MultiByteToWideChar(CP_ACP, 0, str.c_str(), str.size(), buffer, len);
+    buffer[len] = '\0';             //添加字符串结尾  
+    //删除缓冲区并返回值  
+    result.append(buffer);
+    delete[] buffer;
+    return result;
+}
+
+
+
+MiniImage makeFontToMiniImage(std::string str, int size)
+{
+    HDC hFontCompatibleDC = CreateCompatibleDC(screen_hdc);
+
+    HBITMAP hFontCompatibleBitmap = CreateCompatibleBitmap(screen_hdc, SCREEN_WIDTH, SCREEN_HEIGHT);
+    HBITMAP hFontOldBitmap = (HBITMAP)SelectObject(hFontCompatibleDC, hFontCompatibleBitmap);
+    //SetDIBits(screen_hdc, hCompatibleBitmap, 0, SCREEN_HEIGHT, BUFFER, (BITMAPINFO*)&binfo, DIB_RGB_COLORS);
+    //BitBlt(screen_hdc, -1, -1, SCREEN_WIDTH, SCREEN_HEIGHT, hFontCompatibleDC, 0, 0, SRCCOPY);
+    
+    int bufferWidth = 1000;
+    int bufferHeight = 100;
+
+
+
+
+    HFONT hFontOld;
+    hFontOld = (HFONT)SelectObject(hFontCompatibleDC, nowFont);
+    std::wstring strNow = string2wstring(str);
+    TextOut(hFontCompatibleDC, 0, 0, strNow.c_str(), strNow.size());
+    LPSIZE Size=(LPSIZE)malloc(sizeof(LPSIZE));
+    GetTextExtentPoint32A(hFontCompatibleDC, str.c_str(), str.size(), Size);
+    
+
+
+    MiniImage img;
+    img.width = Size->cx;
+    img.height = Size->cy;
+    img._data = (MiniColor*)malloc(sizeof(MiniColor) * img.width * img.height);
+    
+    double scale = 1;
+    int width = 7.5 * strNow.size()* scale;
+    int height = 15* scale;
+
+    int drawX = 100, drawY = 100;
+    for (int i = 0; i < Size->cy; i++)
+    {
+        for (int j = 0; j < Size->cx; j++)
+        {
+            COLORREF nowColor = GetPixel(hFontCompatibleDC, j,i);
+            MiniColor nowMiniColor;
+
+            nowMiniColor.r = GetRValue(nowColor);
+            nowMiniColor.g = GetGValue(nowColor);
+            nowMiniColor.b = GetBValue(nowColor);
+            if (nowMiniColor.r == 255 && nowMiniColor.g == 255 && nowMiniColor.b == 255) {
+                nowMiniColor.a = 255;
+            }
+            img._data[i * img.width + j] = nowMiniColor;
+        }
+    }
+    return img;
+   
+
+}
+
+void setFont(const std::string& fontName, int size)
+{
+    double fontHeight = size;
+    double fontWidth = fontHeight / 2;
+    nowFont = CreateFont(-fontHeight, -fontWidth, 0, 0, 400, FALSE, FALSE, FALSE,
+        DEFAULT_CHARSET, OUT_CHARACTER_PRECIS, CLIP_CHARACTER_PRECIS,
+        DEFAULT_QUALITY,
+        FF_DONTCARE,
+        L"微软雅黑");
+
+    SendMessage(hwnd, WM_SETFONT, (WPARAM)nowFont, NULL);
 }

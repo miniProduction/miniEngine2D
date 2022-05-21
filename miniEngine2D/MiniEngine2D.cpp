@@ -109,3 +109,14 @@ void MiniEngine2D::drawImage( int x, int y, const MiniImage& img)
 {
 	::drawImage( x, y, img);
 }
+
+void MiniEngine2D::setFont(const std::string& fontName, int size)
+{
+	::setFont(fontName, size);
+}
+
+
+MiniImage MiniEngine2D::makeFontToMiniImage(std::string str, int size)
+{
+	return ::makeFontToMiniImage(str, size);
+}
