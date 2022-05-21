@@ -4,8 +4,7 @@ void showWindow();
 
 
 
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
+
 
 extern MiniColor BUFFER[SCREEN_HEIGHT* SCREEN_WIDTH];
 
@@ -21,3 +20,4 @@ void drawPoint(int x,int y,const MiniColor &);
 void drawLine(int x0, int y0, int x1, int y1, const MiniColor&);
 void drawRect(int x0, int y0, int width, int height, const MiniColor&);
 void drawCircle(int x, int y, double r, const MiniColor&);
+void drawImage(int x, int y, const MiniImage&);

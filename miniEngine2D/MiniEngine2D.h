@@ -8,9 +8,14 @@
 
 #include "Trace.h"
 
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
+
 struct MiniColor
 {
 	char b, g, r, a;
+	MiniColor(int B, int G, int R, int A) :b(B), g(G), r(R), a(A) {};
+	MiniColor() :b(0), g(0), r(0), a(255) {};
 };
 
 struct MiniImage
@@ -33,6 +38,7 @@ public:
 	void drawLine(int x0, int y0, int x1, int y1, const MiniColor&);
 	void drawRect(int x, int y, int width, int height, const MiniColor&);
 	void drawCircle(int x, int y, double r, const MiniColor&);
+	void drawImage( int x, int y, const MiniImage&);
 	
 
 	static int __cdecl log(char const* const _Format, ...);

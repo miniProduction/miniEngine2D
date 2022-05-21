@@ -3,6 +3,7 @@
 
 */
 #include "MiniEngine2D.h"
+#include"util.h"
 #include <iostream>
 #include <io.h>
 #include <fcntl.h>
@@ -26,6 +27,8 @@ int main()
 	MACRO_LogA("中文测试: %d %c %.2f", 123, 'c', 2.5);
 	MACRO_LogW(L"中文测试: %d %c %.2f", 123, 'c', 2.5);
 
+	m.log("miniColorSize %d\n", sizeof(MiniColor));
+
 	m.showWindow();
 
 	bool isGameOver = false;
@@ -33,6 +36,11 @@ int main()
 	MiniColor black, MIZUASAGI;
 	black.r = 0; black.g = 0; black.b = 0;
 	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183;
+
+	MiniImage image = makeRectImage(300, 300, MIZUASAGI);
+
+	double nowPosX = 0, nowPosY = 400;
+	int fx = 1;
 
 	while (!isGameOver) {
 		m.clearScreen();
@@ -42,7 +50,16 @@ int main()
 		m.drawLine(0, 0, 100, 300, black);
 		m.drawRect(1000, 500, 100, 100, black);
 		m.drawCircle(500, 500, 50, black);
-
+		m.drawImage(nowPosX, nowPosY, image);
+		nowPosX += fx*0.5;
+		if (nowPosX > SCREEN_WIDTH - image.width) {
+			fx *= -1;
+			nowPosX = SCREEN_WIDTH - image.width;
+		}
+		if (nowPosX < 0) {
+			fx *= -1;
+			nowPosX = 0;
+		}
 		m.update();
 	}
 

@@ -154,6 +154,7 @@ void clearScreen()
 
 void drawPoint(int x, int y, const MiniColor&c)
 {
+    if (x<0 || x>SCREEN_WIDTH || y<0 || y>SCREEN_HEIGHT)return;
     BUFFER[y * SCREEN_WIDTH + x] = c;
 }
 
@@ -230,4 +231,16 @@ void drawCircle(int x, int y, double r, const MiniColor&c)
     }
     drawLine(lastX, lastY, nowX, nowY, c);
 
+}
+
+void drawImage( int x, int y, const MiniImage& img)
+{
+    for (int i = y; i < img.height + y; i++)
+    {
+        for (int j = x; j < img.width + x; j++)
+        {
+            drawPoint(j, i, img._data[(i - y) * img.width + (j - x)]);
+ 
+        }
+    }
 }

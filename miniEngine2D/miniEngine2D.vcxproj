@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="util.h" />
     <ClInclude Include="MiniEngine2D.h" />
     <ClInclude Include="Trace.h" />
   </ItemGroup>
@@ -152,6 +153,7 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Trace.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

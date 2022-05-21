@@ -106,3 +106,8 @@ void MiniEngine2D::drawCircle(int x, int y, double r, const MiniColor&c)
 {
 	::drawCircle(x, y, r, c);
 }
+
+void MiniEngine2D::drawImage( int x, int y, const MiniImage& img)
+{
+	::drawImage( x, y, img);
+}
