@@ -58,6 +58,12 @@ MiniEngine2D::~MiniEngine2D()
 {
 }
 
+void MiniEngine2D::setTitle(const char* title)
+{
+	::setTitle(title);
+}
+
+
 int __cdecl MiniEngine2D::log(char const* const _Format, ...)
 {
 	va_list _ArgList;

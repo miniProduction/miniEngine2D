@@ -152,7 +152,8 @@ void clearScreen()
         for (int j = 0; j < SCREEN_WIDTH; j++)
         {
             //测试颜色:YANAGIZOME
-            BUFFER[i * SCREEN_WIDTH + j].r = 145;
+            double nowR = (double)i /(double) SCREEN_HEIGHT*255;
+            BUFFER[i * SCREEN_WIDTH + j].r = nowR;
             BUFFER[i * SCREEN_WIDTH + j].g = 173;
             BUFFER[i * SCREEN_WIDTH + j].b = 112;
             BUFFER[i * SCREEN_WIDTH + j].a = 255;
@@ -323,6 +324,12 @@ MiniImage makeFontToMiniImage(std::string str, int size)
             if (nowMiniColor.r == 255 && nowMiniColor.g == 255 && nowMiniColor.b == 255) {
                 nowMiniColor.a = 0;
             }
+            else {
+                nowMiniColor.r = 0;
+                nowMiniColor.g = 0;
+                nowMiniColor.b = 0;
+
+            }
             img._data[i * img.width + j] = nowMiniColor;
         }
     }
@@ -342,4 +349,9 @@ void setFont(const std::string& fontName, int size)
         L"微软雅黑");
 
     SendMessage(hwnd, WM_SETFONT, (WPARAM)nowFont, NULL);
+}
+
+void SetTitle(const char* title)
+{
+    SetWindowTextA(hwnd, title);
 }

@@ -48,6 +48,8 @@ public:
 	void drawCircle(int x, int y, double r, const MiniColor&);
 	void drawImage( int x, int y, const MiniImage&);
 	void setFont(const std::string& fontName, int size);
+	void setTitle(const char* title);
+
 
 	MiniImage makeFontToMiniImage(std::string str, int size);
 	
