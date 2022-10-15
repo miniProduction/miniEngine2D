@@ -351,7 +351,7 @@ void setFont(const std::string& fontName, int size)
     SendMessage(hwnd, WM_SETFONT, (WPARAM)nowFont, NULL);
 }
 
-void SetTitle(const char* title)
+void setTitle(const char* title)
 {
     SetWindowTextA(hwnd, title);
 }
