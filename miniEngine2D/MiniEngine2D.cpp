@@ -1,9 +1,6 @@
 ﻿#include "MiniEngine2D.h"
-#include "Trace.h"
-#include "Graphics.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include"stb_image.h"
-
 
 bool MiniImage::load(const char* filepath)
 {

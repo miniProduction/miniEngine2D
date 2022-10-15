@@ -9,7 +9,6 @@
 #include <string>
 
 
-
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 
@@ -64,3 +63,8 @@ private:
 
 
 };
+
+#include "Trace.h"
+#include "Graphics.h"
+
+
