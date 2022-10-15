@@ -1,7 +1,48 @@
 ﻿#include "MiniEngine2D.h"
 #include "Trace.h"
 #include "Graphics.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include"stb_image.h"
 
+
+bool MiniImage::load(const char* filepath)
+{
+	int channel;
+	unsigned char* idata = stbi_load(filepath, &this->width, &this->height, &channel, 0);
+	if (width == 0 || height == 0) {
+		return false;
+	}
+	int totalPixelSum = width * height;
+	_data = new MiniColor[totalPixelSum];
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			int nowPos = y * width + x;
+			int nowPosIndex = nowPos * 3;
+			MiniColor color(idata[nowPosIndex], idata[nowPosIndex + 1], idata[nowPosIndex + 2]);
+			_data[nowPos] = color;
+		}
+	}
+	return true;
+
+}
+
+bool MiniImage::makeRectImage(int width, int height, const MiniColor& color)
+{
+
+	this->width = width;
+	this->height = height;
+	_data = (MiniColor*)malloc(sizeof(MiniColor) * width * height);
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			_data[i * width + j] = color;
+		}
+	}
+	return true;
+}
 
 MiniEngine2D::MiniEngine2D()
 {

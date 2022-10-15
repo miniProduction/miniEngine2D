@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="MiniEngine2D.h" />
     <ClInclude Include="Trace.h" />

@@ -56,13 +56,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         PostQuitMessage(0);
         break;
     case WM_KEYDOWN:
-        if (VK_ESCAPE == wParam) {
+        if ('F' == wParam) {
             if (full_screen_) {
                 RestoreFullScreen();
             }
             else {
                 FullScreen();
             }
+        }
+
+        if (wParam == VK_ESCAPE) {
+            exit(0);
         }
         break;
     default:

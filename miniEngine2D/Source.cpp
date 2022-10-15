@@ -43,7 +43,11 @@ int main()
 	black.r = 0; black.g = 0; black.b = 0; black.a = 0;
 	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183; MIZUASAGI.a = 0;
 
-	MiniImage image = makeRectImage(300, 300, MIZUASAGI);
+	MiniImage image;
+	image.makeRectImage(300, 300, MIZUASAGI);
+
+	MiniImage image1;
+	image1.load("raw.jpg");
 
 	m.setFont("微软雅黑", 50);
 	m.update();
@@ -63,6 +67,7 @@ int main()
 		m.drawCircle(500, 500, 50, black);
 		m.drawImage(nowPosX, nowPosY, image);
 		m.drawImage(nowPosX, nowPosY, WordImage);
+		m.drawImage(nowPosX+300, nowPosY - 300, image1);
 		nowPosX += fx*0.5;
 		if (nowPosX > SCREEN_WIDTH - image.width) {
 			fx *= -1;
