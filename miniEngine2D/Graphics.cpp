@@ -155,6 +155,7 @@ void clearScreen()
             BUFFER[i * SCREEN_WIDTH + j].r = 145;
             BUFFER[i * SCREEN_WIDTH + j].g = 173;
             BUFFER[i * SCREEN_WIDTH + j].b = 112;
+            BUFFER[i * SCREEN_WIDTH + j].a = 255;
 
         }
     }
@@ -165,9 +166,9 @@ void drawPoint(int x, int y, const MiniColor&c)
     if (x<0 || x>SCREEN_WIDTH || y<0 || y>SCREEN_HEIGHT)return;
     double _a = static_cast<double>(c.a) / 255.0;
     double a = 1 - _a;
-    BUFFER[y * SCREEN_WIDTH + x].r = BUFFER[y * SCREEN_WIDTH + x].r * _a + c.r * a;
-    BUFFER[y * SCREEN_WIDTH + x].g = BUFFER[y * SCREEN_WIDTH + x].g * _a + c.g * a;
-    BUFFER[y * SCREEN_WIDTH + x].b = BUFFER[y * SCREEN_WIDTH + x].b * _a + c.b * a;
+    BUFFER[y * SCREEN_WIDTH + x].r = BUFFER[y * SCREEN_WIDTH + x].r * a + c.r * _a;
+    BUFFER[y * SCREEN_WIDTH + x].g = BUFFER[y * SCREEN_WIDTH + x].g * a + c.g * _a;
+    BUFFER[y * SCREEN_WIDTH + x].b = BUFFER[y * SCREEN_WIDTH + x].b * a + c.b * _a;
 }
 
 void drawLine(int x0, int y0, int x1, int y1, const MiniColor&c)
@@ -320,7 +321,7 @@ MiniImage makeFontToMiniImage(std::string str, int size)
             nowMiniColor.g = GetGValue(nowColor);
             nowMiniColor.b = GetBValue(nowColor);
             if (nowMiniColor.r == 255 && nowMiniColor.g == 255 && nowMiniColor.b == 255) {
-                nowMiniColor.a = 255;
+                nowMiniColor.a = 0;
             }
             img._data[i * img.width + j] = nowMiniColor;
         }

@@ -40,8 +40,8 @@ int main()
 	bool isGameOver = false;
 
 	MiniColor black, MIZUASAGI;
-	black.r = 0; black.g = 0; black.b = 0; black.a = 0;
-	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183; MIZUASAGI.a = 0;
+	black.r = 0; black.g = 0; black.b = 0; black.a = 255;
+	MIZUASAGI.r = 102; MIZUASAGI.g = 186; MIZUASAGI.b = 183; MIZUASAGI.a = 255;
 
 	MiniImage image;
 	image.makeRectImage(300, 300, MIZUASAGI);

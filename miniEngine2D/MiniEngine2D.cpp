@@ -15,10 +15,18 @@ bool MiniImage::load(const char* filepath)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			int nowPos = y * width + x;
-			int nowPosIndex = nowPos * 3;
-			MiniColor color(idata[nowPosIndex], idata[nowPosIndex + 1], idata[nowPosIndex + 2]);
-			_data[nowPos] = color;
+			if (channel == 3) {
+				int nowPos = y * width + x;
+				int nowPosIndex = nowPos * 3;
+				MiniColor color(idata[nowPosIndex], idata[nowPosIndex + 1], idata[nowPosIndex + 2]);
+				_data[nowPos] = color;
+			}
+			else if (channel == 4) {
+				int nowPos = y * width + x;
+				int nowPosIndex = nowPos * 4;
+				MiniColor color(idata[nowPosIndex], idata[nowPosIndex + 1], idata[nowPosIndex + 2],idata[nowPosIndex+3]);
+				_data[nowPos] = color;
+			}
 		}
 	}
 	return true;

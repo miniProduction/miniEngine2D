@@ -1,4 +1,8 @@
-﻿#include "Trace.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_NON_CONFORMING_SWPRINTFS
+
+#include "Trace.h"
+
 
 #include <Windows.h>
 #include <iostream>

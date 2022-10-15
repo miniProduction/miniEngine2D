@@ -14,10 +14,11 @@ const int SCREEN_HEIGHT = 720;
 
 struct MiniColor
 {
+	//a 通道 0是透明 255是不透明
 	unsigned char b, g, r, a;
 	MiniColor(int R, int G, int B, int A) :b(B), g(G), r(R), a(A) {};
-	MiniColor(int R, int G, int B) :b(B), g(G), r(R), a(0) {};
-	MiniColor() :b(0), g(0), r(0), a(0) {};
+	MiniColor(int R, int G, int B) :b(B), g(G), r(R), a(255) {};
+	MiniColor() :b(0), g(0), r(0), a(255) {};
 
 };
 
