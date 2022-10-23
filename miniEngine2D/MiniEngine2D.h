@@ -32,6 +32,43 @@ struct MiniImage
 
 };
 
+/// <summary>
+/// 发生鼠标键盘事件时的事件类型
+/// </summary>
+enum EventType {
+	/// <summary>
+	/// KeyCode 对应的键被按下
+	/// </summary>
+	KeyDown,
+
+	/// <summary>
+	/// KeyCode 对应的键被抬起
+	/// </summary>
+	KeyUp
+};
+
+/// <summary>
+/// 用于处理鼠标事件的函数类型
+/// </summary>
+/// <param name="eventType">发生事件的类型，有按下(EventType::KeyDown)和抬起(EventType::KeyUp)两种</param>
+/// <param name="keyCode">发生事件的具体键。
+/// VK_LBUTTON 0x01 //鼠标左键
+/// VK_RBUTTON 0x02 //鼠标右键
+/// VK_MBUTTON 0x04 //鼠标中键
+/// </param>
+/// <param name="x">发生事件所在客户区域的横坐标</param>
+/// <param name="y">发生事件所在客户区域的纵坐标</param>
+/// <returns></returns>
+using PFuncMouseEvent = void(__cdecl *)(EventType eventType, int keyCode, int x, int y);
+
+/// <summary>
+/// 用于处理键盘事件的函数类型
+/// </summary>
+/// <param name="eventType">发生事件的类型，有按下(EventType::KeyDown)和抬起(EventType::KeyUp)两种</param>
+/// <param name="keyCode">发生事件的具体键。与WinUser.h 中Virtual Keys, Standard Set定义一致</param>
+/// <returns></returns>
+using PFuncKeyboardEvent = void(__cdecl *)(EventType eventType, int keyCode);
+
 
 class MiniEngine2D {
 public:
@@ -53,17 +90,30 @@ public:
 
 	MiniImage makeFontToMiniImage(std::string str, int size);
 	
+	/// <summary>
+	/// 给MiniEngine添加一个用于处理鼠标事件的函数，在发生鼠标事件时，
+	/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+	/// </summary>
+	/// <param name="pfunc">处理函数</param>
+	void addEventHook(PFuncMouseEvent pfunc);
+
+	/// <summary>
+	/// 给MiniEngine添加一个用于处理键盘事件的函数，在发生键盘事件时，
+	/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+	/// </summary>
+	/// <param name="pfunc">处理函数</param>
+	void addEventHook(PFuncKeyboardEvent pfunc);
 
 	static int __cdecl log(char const* const _Format, ...);
 	static int __cdecl log(wchar_t const* const _Format, ...);
 	static int __cdecl log(int obj);
+	static int __cdecl log(unsigned long obj);
 	static int __cdecl log(float obj);
 	static int __cdecl log(double obj);
 	static int __cdecl logDetail(char const* const _Format, ...);
 	static int __cdecl logDetail(wchar_t const* const _Format, ...);
 	static void exportLogToFile(const std::string logFilePath);
 private:
-
 
 };
 

@@ -11,10 +11,7 @@ using namespace std;
 
 int main()
 {
-	//system("chcp");
-	//system("chcp 65001 ");
-	system("chcp 437 ");
-	//system("chcp 936");
+	system("chcp");
 	cout << u8"中文测试" << endl;
 	cout << "中文测试" << endl;
 	wcout << L"中文测试" << endl;
@@ -32,6 +29,18 @@ int main()
 	//MACRO_Log(TEXT("中文测试: %d %c %.2f"), 123, 'c', 2.5);
 	//MACRO_LogA("中文测试: %d %c %.2f", 123, 'c', 2.5);
 	//MACRO_LogW(L"中文测试: %d %c %.2f", 123, 'c', 2.5);
+	
+	m.addEventHook([](EventType eventType, int keyCode, int x, int y) {
+		MiniEngine2D::log("Mouse: EventType %d KeyCode %d (%d,%d)",eventType, keyCode,x,y);
+		throw std::exception("I am SORRY!");
+	});
+	m.addEventHook([](EventType eventType, int keyCode){
+		MiniEngine2D::log("Keyboard: EventType %d KeyCode %d", eventType, keyCode);
+		int* a = 0;
+		*a = 123;
+	});
+	//取消注册事件
+	m.addEventHook((PFuncKeyboardEvent)NULL);
 
 	m.log("miniColorSize %d\n", sizeof(MiniColor));
 

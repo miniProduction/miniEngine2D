@@ -87,6 +87,11 @@ int __cdecl MiniEngine2D::log(int obj)
 	return log("%d", obj);
 }
 
+int __cdecl MiniEngine2D::log(unsigned long obj)
+{
+	return log("%u", obj);
+}
+
 int __cdecl MiniEngine2D::log(float obj)
 {
 	return log("%f", obj);
@@ -171,4 +176,26 @@ void MiniEngine2D::setFont(const std::string& fontName, int size)
 MiniImage MiniEngine2D::makeFontToMiniImage(std::string str, int size)
 {
 	return ::makeFontToMiniImage(str, size);
+}
+
+/// <summary>
+/// 给MiniEngine添加一个用于处理鼠标事件的函数，在发生鼠标事件时，
+/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+/// </summary>
+/// <param name="pfunc">处理函数</param>
+void MiniEngine2D::addEventHook(PFuncMouseEvent pfunc)
+{
+	//可能会有跨线程写的风险
+	pFuncMouseEvent = pfunc;
+}
+
+/// <summary>
+/// 给MiniEngine添加一个用于处理键盘事件的函数，在发生键盘事件时，
+/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+/// </summary>
+/// <param name="pfunc">处理函数</param>
+void MiniEngine2D::addEventHook(PFuncKeyboardEvent pfunc)
+{
+	//可能会有跨线程写的风险
+	pFuncKeyboardEvent = pfunc;
 }
