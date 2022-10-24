@@ -84,7 +84,18 @@ int main()
 		}
 		if (nowPosX < 0) {
 			fx *= -1;
-			nowPosX = 0;
+			nowPosX = 0; 0x5a;
+		}
+		if (m.isKeyDown(KeyCode::MouseLeft)) {
+			auto pos = m.getMousePosition();
+			m.log("Left mouse down (%d,%d)", pos.first, pos.second);
+		}
+		if (m.isKeyUp(KeyCode::MouseRight)) {
+			auto pos = m.getMousePosition();
+			m.log("Right mouse up (%d,%d)", pos.first, pos.second);
+		}
+		if (m.isKeyUp(KeyCode::A)) {
+			m.log("A up");
 		}
 		m.update();
 	}

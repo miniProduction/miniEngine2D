@@ -2,6 +2,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include"stb_image.h"
 
+//引擎内部使用
+extern PFuncMouseEvent pFuncMouseEvent;
+extern PFuncKeyboardEvent pFuncKeyboardEvent;
+extern unsigned char keyStatus[0xFF];
+extern std::pair<int, int> mousePosition;
+
 bool MiniImage::load(const char* filepath)
 {
 	int channel;
@@ -63,6 +69,26 @@ void MiniEngine2D::setTitle(const char* title)
 	::setTitle(title);
 }
 
+
+bool MiniEngine2D::isKeyDown(int keyCode)
+{
+	bool result = keyStatus[keyCode] & 0x10;
+	keyStatus[keyCode] &= 0x0F;
+	return result;
+}
+
+bool MiniEngine2D::isKeyUp(int keyCode)
+{
+	bool result = keyStatus[keyCode] & 0x01;
+	keyStatus[keyCode] &= 0xF0;
+	//return GetAsyncKeyState(keyCode) & 0x0001;
+	return result;
+}
+
+std::pair<int, int> MiniEngine2D::getMousePosition()
+{
+	return mousePosition;
+}
 
 int __cdecl MiniEngine2D::log(char const* const _Format, ...)
 {

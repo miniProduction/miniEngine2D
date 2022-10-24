@@ -69,6 +69,127 @@ using PFuncMouseEvent = void(__cdecl *)(EventType eventType, int keyCode, int x,
 /// <returns></returns>
 using PFuncKeyboardEvent = void(__cdecl *)(EventType eventType, int keyCode);
 
+enum KeyCode {
+	MouseLeft = 1,
+	MouseRight,
+
+	//3 保留
+
+	MouseMiddle = 4,
+
+	//5,6,7保留
+
+	Back = 0x08,
+	Tab,
+
+	//10,11保留
+
+	Clear = 0x0C,
+	Return,
+
+	//0x0E - 0x0F : unassigned
+
+	Shift = 0x10,
+	Control,
+	KC_Escape = 0x1B,
+	Space = 0x20,
+	Left = 0x25,
+	Up,
+	Right,
+	Down,
+	Select,
+	Print,
+	Execute,
+	Snapshot,
+	Insert,
+	Delete,
+	Help,
+	_0,
+	_1,
+	_2,
+	_3,
+	_4,
+	_5,
+	_6,
+	_7,
+	_8,
+	_9,
+
+	//0x3A - 0x40 : unassigned
+
+	A = 0x41,
+	B,
+	C,
+	D,
+	E,
+	F,
+	G,
+	H,
+	I,
+	J,
+	K,
+	L,
+	M,
+	N,
+	O,
+	P,
+	Q,
+	R,
+	S,
+	T,
+	U,
+	V,
+	W,
+	X,
+	Y,
+	Z,
+	LeftWin,
+	RightWin,
+	APPs,
+	KC_Sleep = 0x5F,
+	NumPad0,
+	NumPad1,
+	NumPad2,
+	NumPad3,
+	NumPad4,
+	NumPad5,
+	NumPad6,
+	NumPad7,
+	NumPad8,
+	NumPad9,
+	Multiply,
+	Add,
+	Separator,
+	Subtract,
+	Decimal,
+	Divide,
+	F1,
+	F2,
+	F3,
+	F4,
+	F5,
+	F6,
+	F7,
+	F8,
+	F9,
+	F10,
+	F11,
+	F12,
+	F13,
+	F14,
+	F15,
+	F16,
+	F17,
+	F18,
+	F19,
+	F20,
+	F21,
+	F22,
+	F23,
+	F24,
+	NumLock = 0x90,
+	Scroll
+};
 
 class MiniEngine2D {
 public:
@@ -103,6 +224,37 @@ public:
 	/// </summary>
 	/// <param name="pfunc">处理函数</param>
 	void addEventHook(PFuncKeyboardEvent pfunc);
+
+	/// <summary>
+	/// 检测keyCode是否按下
+	/// </summary>
+	/// <param name="keyCode">
+	/// 发生事件的具体键,与WinUser.h 中Virtual Keys, Standard Set定义一致,补充鼠标键定义如下:
+	/// VK_LBUTTON 0x01 //鼠标左键 
+	/// VK_RBUTTON 0x02 //鼠标右键 
+	/// VK_MBUTTON 0x04 //鼠标中键 
+	/// </param>
+	/// <returns>
+	/// true keyCode按下
+	/// false keyCode未按下
+	/// </returns>
+	bool isKeyDown(int keyCode);
+
+	/// <summary>
+	/// 检测keyCode是否抬起
+	/// </summary>
+	/// <param name="keyCode">与isKeyDown定义一致不再赘述</param>
+	/// <returns>
+	/// true keyCode抬起
+	/// false keyCode未抬起
+	/// </returns>
+	bool isKeyUp(int keyCode);
+
+	/// <summary>
+	/// 获取鼠标当前点击事件发生时的位置，只有当isKeyDown(VK_*BUTTON)为真时才有效
+	/// </summary>
+	/// <returns>返回一个(x,y)数对</returns>
+	std::pair<int, int> getMousePosition();
 
 	static int __cdecl log(char const* const _Format, ...);
 	static int __cdecl log(wchar_t const* const _Format, ...);

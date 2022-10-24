@@ -25,5 +25,3 @@ MiniImage makeFontToMiniImage(std::string str,int size);
 void setFont(const std::string & fontName, int size);
 void setTitle(const char* title);
 
-extern PFuncMouseEvent pFuncMouseEvent;
-extern PFuncKeyboardEvent pFuncKeyboardEvent;
