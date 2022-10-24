@@ -36,11 +36,16 @@ int main()
 	});
 	m.addEventHook([](EventType eventType, int keyCode){
 		MiniEngine2D::log("Keyboard: EventType %d KeyCode %d", eventType, keyCode);
-		int* a = 0;
-		*a = 123;
+		//int* a = 0;
+		//*a = 123;
+		int i = 0;
+		while (true) {
+			i++;
+
+		}
 	});
 	//取消注册事件
-	m.addEventHook((PFuncKeyboardEvent)NULL);
+	//m.addEventHook((PFuncKeyboardEvent)NULL);
 
 	m.log("miniColorSize %d\n", sizeof(MiniColor));
 
@@ -61,7 +66,7 @@ int main()
 	m.setFont("微软雅黑", 50);
 	m.update();
 
-	MiniImage WordImage= m.makeFontToMiniImage("MiniEngine2D", 50);
+	MiniImage WordImage= m.makeFontToMiniImage("miniEngine2D", 50);
 
 	double nowPosX = 0, nowPosY = 400;
 	int fx = 1;
@@ -96,6 +101,9 @@ int main()
 		}
 		if (m.isKeyUp(KeyCode::A)) {
 			m.log("A up");
+		}
+		if (m.isKeyDown(KeyCode::A)) {
+			m.log("A down");
 		}
 		m.update();
 	}

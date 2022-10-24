@@ -29,6 +29,21 @@ struct MiniImage
 	MiniImage() :height(0), width(0), _data(nullptr) {};
 	bool load(const char* filepath);
 	bool makeRectImage(int width, int height, const MiniColor& color);
+	MiniImage(const MiniImage& mImg)
+	{
+		height = mImg.height;
+		width = mImg.width;
+		_data = new MiniColor[height * width];
+		for (int i = 0; i < height*width; i++)
+		{
+			_data[i] = mImg._data[i];
+		}
+	}
+	~MiniImage() {
+		if (_data != nullptr) {
+			delete[]_data;
+		}
+	}
 
 };
 
@@ -265,7 +280,6 @@ public:
 	static int __cdecl logDetail(char const* const _Format, ...);
 	static int __cdecl logDetail(wchar_t const* const _Format, ...);
 	static void exportLogToFile(const std::string logFilePath);
-private:
 
 };
 

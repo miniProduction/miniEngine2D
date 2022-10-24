@@ -452,6 +452,8 @@ MiniImage makeFontToMiniImage(std::string str, int size)
 
 
     MiniImage img;
+    if (Size->cx < 0 || Size->cy < 0)return img;
+
     img.width = Size->cx;
     img.height = Size->cy;
     img._data = (MiniColor*)malloc(sizeof(MiniColor) * img.width * img.height);
@@ -483,6 +485,7 @@ MiniImage makeFontToMiniImage(std::string str, int size)
             img._data[i * img.width + j] = nowMiniColor;
         }
     }
+    free(Size);
     return img;
    
 
