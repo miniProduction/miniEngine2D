@@ -22,9 +22,10 @@ MiniColor BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
 
 PFuncMouseEvent pFuncMouseEvent = NULL;
 PFuncKeyboardEvent pFuncKeyboardEvent = NULL;
-//高8位 表示按下相关
-//高8位 表示抬起相关
+//高4位 表示按下相关
+//低4位 表示抬起相关
 unsigned char keyStatus[0xFF]{ 0 };
+//只有在发生鼠标事件后，其值才是有效值
 std::pair<int, int> mousePosition{ 0,0 };
 
 double DecToRad(double ang)
@@ -55,7 +56,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     mousePosition.second = lParam >> 16;
 
     switch (uMsg) {
-    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDOWN: {
         //引擎内部代码
 
         //处理用户hook
@@ -64,13 +65,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 pFuncMouseEvent(EventType::KeyDown, VK_LBUTTON, lParam & 0x0000ffff, lParam >> 16);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Left key down)");
             }
         }
         keyStatus[VK_LBUTTON] |= 0x10;
         break;
-    case WM_LBUTTONUP:
+    }
+    case WM_LBUTTONUP: {
         //引擎内部代码
 
         //处理用户hook
@@ -79,13 +81,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 pFuncMouseEvent(EventType::KeyUp, VK_LBUTTON, lParam & 0x0000ffff, lParam >> 16);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Left key up)");
             }
         }
         keyStatus[VK_LBUTTON] |= 0x01;
         break;
-    case WM_RBUTTONDOWN:
+    }
+    case WM_RBUTTONDOWN: {
         //引擎内部代码
 
         //处理用户hook
@@ -94,13 +97,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 pFuncMouseEvent(EventType::KeyDown, VK_RBUTTON, lParam & 0x0000ffff, lParam >> 16);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Right key down)");
             }
         }
         keyStatus[VK_RBUTTON] |= 0x10;
         break;
-    case WM_RBUTTONUP:
+    }
+    case WM_RBUTTONUP: {
         //引擎内部代码
 
         //处理用户hook
@@ -109,13 +113,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 pFuncMouseEvent(EventType::KeyUp, VK_RBUTTON, lParam & 0x0000ffff, lParam >> 16);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Right key up)");
             }
         }
         keyStatus[VK_RBUTTON] |= 0x01;
         break;
-    case WM_MBUTTONDOWN:
+    }
+    case WM_MBUTTONDOWN: {
         //引擎内部代码
 
         //处理用户hook
@@ -124,12 +129,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 pFuncMouseEvent(EventType::KeyDown, VK_MBUTTON, lParam & 0x0000ffff, lParam >> 16);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Middle key down)");
             }
         }
+        keyStatus[VK_MBUTTON] |= 0x10;
         break;
-    case WM_MBUTTONUP:
+    }
+    case WM_MBUTTONUP: {
         //引擎内部代码
 
         //处理用户hook
@@ -138,20 +145,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 pFuncMouseEvent(EventType::KeyUp, VK_MBUTTON, lParam & 0x0000ffff, lParam >> 16);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Middle key up)");
             }
         }
+        keyStatus[VK_MBUTTON] |= 0x01;
         break;
-    case WM_PAINT:
+    }
+    case WM_PAINT: {
         break;
-    case WM_CLOSE:
+    }
+    case WM_CLOSE: {
         DestroyWindow(hwnd);  //销毁窗口
         break;
-    case WM_DESTROY:
+    }
+    case WM_DESTROY: {
         PostQuitMessage(0);
         break;
-    case WM_KEYDOWN:
+    }
+    case WM_KEYDOWN: {
+
         //引擎内部代码
         if ('F' == wParam) {
             if (full_screen_) {
@@ -173,7 +186,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             __except (EXCEPTION_EXECUTE_HANDLER) {
                 //具体的异常信息处理 后边再说吧。
                 //PEXCEPTION_POINTERS ret = GetExceptionInformation();
-                MiniEngine2D::log("ExceptionCode:0x%X",GetExceptionCode());
+                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
                 MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
             }
             /*try
@@ -192,13 +205,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         }
         keyStatus[wParam] |= 0x10;
         break;
-    case WM_KEYUP:
+    }
+    case WM_KEYUP: {
         //引擎内部代码
-        
+
         //处理用户hook
         if (pFuncKeyboardEvent != NULL) {
             __try {
-                pFuncKeyboardEvent(EventType::KeyDown, wParam);
+                pFuncKeyboardEvent(EventType::KeyUp, wParam);
             }
             __except (EXCEPTION_EXECUTE_HANDLER) {
                 MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
@@ -219,6 +233,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         }
         keyStatus[wParam] |= 0x01;
         break;
+    }
+    case WM_UNICHAR: {
+        MiniEngine2D::log("WM_UNICHAR %X %X", wParam, lParam);
+        break;
+    }
+    case WM_CHAR: {
+        MiniEngine2D::log("WM_CHAR    %X %X", wParam, lParam);
+        break;
+    }
     default:
         return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }

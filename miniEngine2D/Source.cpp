@@ -32,17 +32,10 @@ int main()
 	
 	m.addEventHook([](EventType eventType, int keyCode, int x, int y) {
 		MiniEngine2D::log("Mouse: EventType %d KeyCode %d (%d,%d)",eventType, keyCode,x,y);
-		throw std::exception("I am SORRY!");
+		//throw std::exception("I am SORRY!");
 	});
 	m.addEventHook([](EventType eventType, int keyCode){
 		MiniEngine2D::log("Keyboard: EventType %d KeyCode %d", eventType, keyCode);
-		//int* a = 0;
-		//*a = 123;
-		int i = 0;
-		while (true) {
-			i++;
-
-		}
 	});
 	//取消注册事件
 	//m.addEventHook((PFuncKeyboardEvent)NULL);
@@ -91,7 +84,7 @@ int main()
 			fx *= -1;
 			nowPosX = 0; 0x5a;
 		}
-		if (m.isKeyDown(KeyCode::MouseLeft)) {
+		/*if (m.isKeyDown(KeyCode::MouseLeft)) {
 			auto pos = m.getMousePosition();
 			m.log("Left mouse down (%d,%d)", pos.first, pos.second);
 		}
@@ -104,7 +97,7 @@ int main()
 		}
 		if (m.isKeyDown(KeyCode::A)) {
 			m.log("A down");
-		}
+		}*/
 		m.update();
 	}
 
