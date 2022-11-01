@@ -27,6 +27,8 @@ PFuncKeyboardEvent pFuncKeyboardEvent = NULL;
 unsigned char keyStatus[0xFF]{ 0 };
 //只有在发生鼠标事件后，其值才是有效值
 std::pair<int, int> mousePosition{ 0,0 };
+bool isVK_PACKET = false;
+std::pair<WPARAM, LPARAM> packetMsgParam{ 0,0 };
 
 double DecToRad(double ang)
 {
@@ -164,7 +166,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         break;
     }
     case WM_KEYDOWN: {
-
         //引擎内部代码
         if ('F' == wParam) {
             if (full_screen_) {
@@ -178,38 +179,39 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (wParam == VK_ESCAPE) {
             exit(0);
         }
+
         //处理用户hook
-        if (pFuncKeyboardEvent != NULL) {
-            __try {
-                pFuncKeyboardEvent(EventType::KeyDown, wParam);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                //具体的异常信息处理 后边再说吧。
-                //PEXCEPTION_POINTERS ret = GetExceptionInformation();
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
-            }
-            /*try
-            {
-                pFuncKeyboardEvent(EventType::KeyDown, wParam);
-            }
-            catch (const std::exception& e)
-            {
-                MiniEngine2D::log(e.what());
-                MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
-            }
-            catch (...) {
-                MiniEngine2D::log("Unknow exception");
-                MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
-            }*/
+        if (wParam == VK_PACKET) {
+            //使用了Unicode 的KeyCode需要转换
+            isVK_PACKET = true;
         }
-        keyStatus[wParam] |= 0x10;
+        else {
+            //other
+            if (pFuncKeyboardEvent != NULL) {
+                __try {
+                    pFuncKeyboardEvent(EventType::KeyDown, wParam);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER) {
+                    //具体的异常信息处理 后边再说吧。
+                    //PEXCEPTION_POINTERS ret = GetExceptionInformation();
+                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
+                }
+            }
+            keyStatus[wParam] |= 0x10;
+        }
         break;
     }
     case WM_KEYUP: {
         //引擎内部代码
 
         //处理用户hook
+        if (wParam == VK_PACKET && isVK_PACKET) {
+            //读取经过翻译的参数
+            wParam = packetMsgParam.first;
+            lParam = packetMsgParam.second;
+            isVK_PACKET = false;
+        }
         if (pFuncKeyboardEvent != NULL) {
             __try {
                 pFuncKeyboardEvent(EventType::KeyUp, wParam);
@@ -217,21 +219,54 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             __except (EXCEPTION_EXECUTE_HANDLER) {
                 MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
             }
-            /*try
-            {
-                pFuncKeyboardEvent(EventType::KeyUp, wParam);
-            }
-            catch (const std::exception& e)
-            {
-                MiniEngine2D::log(e.what());
-                MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
-            }
-            catch (...) {
-                MiniEngine2D::log("Unknow exception");
-                MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
-            }*/
         }
         keyStatus[wParam] |= 0x01;
+        break;
+    }
+    case WM_SYSKEYDOWN: {
+        //引擎内部代码
+
+        //处理用户hook
+        if (wParam == VK_PACKET) {
+            //使用了Unicode 的KeyCode需要转换
+            isVK_PACKET = true;
+        }
+        else {
+            //other
+            if (pFuncKeyboardEvent != NULL) {
+                __try {
+                    pFuncKeyboardEvent(EventType::KeyDown, wParam);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER) {
+                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
+                }
+            }
+            keyStatus[wParam] |= 0x10;
+        }
+        break;
+    }
+    case WM_SYSKEYUP: {
+        //引擎内部代码
+
+        //处理用户hook
+        if (wParam == VK_PACKET) {
+            //使用了Unicode 的KeyCode需要转换
+            isVK_PACKET = true;
+        }
+        else {
+            //other
+            if (pFuncKeyboardEvent != NULL) {
+                __try {
+                    pFuncKeyboardEvent(EventType::KeyUp, wParam);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER) {
+                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
+                }
+            }
+            keyStatus[wParam] |= 0x01;
+        }
         break;
     }
     case WM_UNICHAR: {
@@ -239,7 +274,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         break;
     }
     case WM_CHAR: {
-        MiniEngine2D::log("WM_CHAR    %X %X", wParam, lParam);
+        //MiniEngine2D::log("WM_CHAR    %X %X", wParam, lParam);
+        if (isVK_PACKET) {
+            //存储key down消息的参数
+            packetMsgParam.first = wParam;
+            packetMsgParam.second = lParam;
+
+            if (pFuncKeyboardEvent != NULL) {
+                __try {
+                    pFuncKeyboardEvent(EventType::KeyDown, wParam);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER) {
+                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
+                }
+            }
+            keyStatus[wParam] |= 0x10;
+        }
         break;
     }
     default:
