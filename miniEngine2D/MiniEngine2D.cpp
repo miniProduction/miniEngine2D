@@ -3,8 +3,8 @@
 #include"stb_image.h"
 
 //引擎内部使用
-extern PFuncMouseEvent pFuncMouseEvent;
-extern PFuncKeyboardEvent pFuncKeyboardEvent;
+extern _InputEventHookConfig mouseEventHookConfig;
+extern _InputEventHookConfig keyboardEventHookConfig;
 extern unsigned char keyStatus[0xFF];
 extern std::pair<int, int> mousePosition;
 
@@ -206,22 +206,28 @@ MiniImage MiniEngine2D::makeFontToMiniImage(std::string str, int size)
 
 /// <summary>
 /// 给MiniEngine添加一个用于处理鼠标事件的函数，在发生鼠标事件时，
-/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+/// MiniEngine内部会先处理保留事件，处理完成之后会启动一个线程调用pfunc
+/// 线程默认等待时间1000 ms
 /// </summary>
 /// <param name="pfunc">处理函数</param>
-void MiniEngine2D::addEventHook(PFuncMouseEvent pfunc)
+/// <param name="timeout">等待时间，单位毫秒，-1则无限等待，默认值1000ms</param>
+void MiniEngine2D::addEventHook(PFuncMouseEvent pfunc, int timeout)
 {
 	//可能会有跨线程写的风险
-	pFuncMouseEvent = pfunc;
+	mouseEventHookConfig.pFuncMouseEvent = pfunc;
+	mouseEventHookConfig.timeout = timeout;
 }
 
 /// <summary>
 /// 给MiniEngine添加一个用于处理键盘事件的函数，在发生键盘事件时，
-/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+/// MiniEngine内部会先处理保留事件，处理完成之后会启动一个线程调用pfunc
+/// 线程默认等待时间1000 ms
 /// </summary>
 /// <param name="pfunc">处理函数</param>
-void MiniEngine2D::addEventHook(PFuncKeyboardEvent pfunc)
+/// <param name="timeout">等待时间，单位毫秒，-1则无限等待，默认值1000ms</param>
+void MiniEngine2D::addEventHook(PFuncKeyboardEvent pfunc, int timeout)
 {
 	//可能会有跨线程写的风险
-	pFuncKeyboardEvent = pfunc;
+	keyboardEventHookConfig.pFuncKeyboardEvent = pfunc;
+	keyboardEventHookConfig.timeout = timeout;
 }

@@ -84,6 +84,20 @@ using PFuncMouseEvent = void(__cdecl *)(EventType eventType, int keyCode, int x,
 /// <returns></returns>
 using PFuncKeyboardEvent = void(__cdecl *)(EventType eventType, int keyCode);
 
+struct _InputEventHookConfig {
+	union 
+	{
+		PFuncMouseEvent pFuncMouseEvent;
+		PFuncKeyboardEvent pFuncKeyboardEvent;
+	};
+	int timeout;
+	_InputEventHookConfig() {
+		pFuncMouseEvent = NULL;
+		timeout = 1000;
+	}
+};
+typedef struct _InputEventHookConfig _InputEventHookConfig;
+
 enum KeyCode {
 	MouseLeft = 1,
 	MouseRight,
@@ -228,17 +242,21 @@ public:
 	
 	/// <summary>
 	/// 给MiniEngine添加一个用于处理鼠标事件的函数，在发生鼠标事件时，
-	/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+	/// MiniEngine内部会先处理保留事件，处理完成之后会启动一个线程调用pfunc
+	/// 线程默认等待时间1000 ms
 	/// </summary>
 	/// <param name="pfunc">处理函数</param>
-	void addEventHook(PFuncMouseEvent pfunc);
+	/// <param name="timeout">等待时间，单位毫秒，-1则无限等待，默认值1000ms</param>
+	void addEventHook(PFuncMouseEvent pfunc, int timeout = 1000);
 
 	/// <summary>
 	/// 给MiniEngine添加一个用于处理键盘事件的函数，在发生键盘事件时，
-	/// MiniEngine内部会先处理保留事件，处理完成之后会调用pfunc
+	/// MiniEngine内部会先处理保留事件，处理完成之后会启动一个线程调用pfunc
+	/// 线程默认等待时间1000 ms
 	/// </summary>
 	/// <param name="pfunc">处理函数</param>
-	void addEventHook(PFuncKeyboardEvent pfunc);
+	/// <param name="timeout">等待时间，单位毫秒，-1则无限等待，默认值1000ms</param>
+	void addEventHook(PFuncKeyboardEvent pfunc, int timeout = 1000);
 
 	/// <summary>
 	/// 检测keyCode是否按下
@@ -285,5 +303,4 @@ public:
 
 #include "Trace.h"
 #include "Graphics.h"
-
 

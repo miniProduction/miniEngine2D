@@ -20,8 +20,8 @@ HFONT nowFont;
 
 MiniColor BUFFER[SCREEN_HEIGHT * SCREEN_WIDTH];
 
-PFuncMouseEvent pFuncMouseEvent = NULL;
-PFuncKeyboardEvent pFuncKeyboardEvent = NULL;
+_InputEventHookConfig mouseEventHookConfig;
+_InputEventHookConfig keyboardEventHookConfig;
 //高4位 表示按下相关
 //低4位 表示抬起相关
 unsigned char keyStatus[0xFF]{ 0 };
@@ -62,14 +62,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         //引擎内部代码
 
         //处理用户hook
-        if (pFuncMouseEvent != NULL) {
-            __try {
-                pFuncMouseEvent(EventType::KeyDown, VK_LBUTTON, lParam & 0x0000ffff, lParam >> 16);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Left key down)");
-            }
+        if (mouseEventHookConfig.pFuncMouseEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        mouseEventHookConfig.pFuncMouseEvent(EventType::KeyDown, VK_LBUTTON, mousePosition.first, mousePosition.second);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Left key down)");
+                    }
+                    return 0;
+                    }, NULL, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, mouseEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, NULL, 0, NULL);
         }
         keyStatus[VK_LBUTTON] |= 0x10;
         break;
@@ -78,14 +93,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         //引擎内部代码
 
         //处理用户hook
-        if (pFuncMouseEvent != NULL) {
-            __try {
-                pFuncMouseEvent(EventType::KeyUp, VK_LBUTTON, lParam & 0x0000ffff, lParam >> 16);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Left key up)");
-            }
+        if (mouseEventHookConfig.pFuncMouseEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        mouseEventHookConfig.pFuncMouseEvent(EventType::KeyUp, VK_LBUTTON, mousePosition.first, mousePosition.second);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Left key up)");
+                    }
+                    return 0;
+                    }, NULL, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, mouseEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, NULL, 0, NULL);
         }
         keyStatus[VK_LBUTTON] |= 0x01;
         break;
@@ -94,14 +124,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         //引擎内部代码
 
         //处理用户hook
-        if (pFuncMouseEvent != NULL) {
-            __try {
-                pFuncMouseEvent(EventType::KeyDown, VK_RBUTTON, lParam & 0x0000ffff, lParam >> 16);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Right key down)");
-            }
+        if (mouseEventHookConfig.pFuncMouseEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        mouseEventHookConfig.pFuncMouseEvent(EventType::KeyDown, VK_RBUTTON, mousePosition.first, mousePosition.second);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Right key down)");
+                    }
+                    return 0;
+                    }, NULL, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, mouseEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, NULL, 0, NULL);
         }
         keyStatus[VK_RBUTTON] |= 0x10;
         break;
@@ -110,14 +155,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         //引擎内部代码
 
         //处理用户hook
-        if (pFuncMouseEvent != NULL) {
-            __try {
-                pFuncMouseEvent(EventType::KeyUp, VK_RBUTTON, lParam & 0x0000ffff, lParam >> 16);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Right key up)");
-            }
+        if (mouseEventHookConfig.pFuncMouseEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        mouseEventHookConfig.pFuncMouseEvent(EventType::KeyUp, VK_RBUTTON, mousePosition.first, mousePosition.second);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Right key up)");
+                    }
+                    return 0;
+                    }, NULL, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, mouseEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, NULL, 0, NULL);
         }
         keyStatus[VK_RBUTTON] |= 0x01;
         break;
@@ -126,14 +186,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         //引擎内部代码
 
         //处理用户hook
-        if (pFuncMouseEvent != NULL) {
-            __try {
-                pFuncMouseEvent(EventType::KeyDown, VK_MBUTTON, lParam & 0x0000ffff, lParam >> 16);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Middle key down)");
-            }
+        if (mouseEventHookConfig.pFuncMouseEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        mouseEventHookConfig.pFuncMouseEvent(EventType::KeyDown, VK_MBUTTON, mousePosition.first, mousePosition.second);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Middle key down)");
+                    }
+                    return 0;
+                    }, NULL, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, mouseEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, NULL, 0, NULL);
         }
         keyStatus[VK_MBUTTON] |= 0x10;
         break;
@@ -142,14 +217,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         //引擎内部代码
 
         //处理用户hook
-        if (pFuncMouseEvent != NULL) {
-            __try {
-                pFuncMouseEvent(EventType::KeyUp, VK_MBUTTON, lParam & 0x0000ffff, lParam >> 16);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Middle key up)");
-            }
+        if (mouseEventHookConfig.pFuncMouseEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        mouseEventHookConfig.pFuncMouseEvent(EventType::KeyUp, VK_MBUTTON, mousePosition.first, mousePosition.second);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling mouse code.(Middle key up)");
+                    }
+                    return 0;
+                    }, NULL, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, mouseEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, NULL, 0, NULL);
         }
         keyStatus[VK_MBUTTON] |= 0x01;
         break;
@@ -165,6 +255,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         PostQuitMessage(0);
         break;
     }
+    case WM_SYSKEYDOWN:
+        //合并处理
     case WM_KEYDOWN: {
         //引擎内部代码
         if ('F' == wParam) {
@@ -187,21 +279,36 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         }
         else {
             //other
-            if (pFuncKeyboardEvent != NULL) {
-                __try {
-                    pFuncKeyboardEvent(EventType::KeyDown, wParam);
-                }
-                __except (EXCEPTION_EXECUTE_HANDLER) {
-                    //具体的异常信息处理 后边再说吧。
-                    //PEXCEPTION_POINTERS ret = GetExceptionInformation();
-                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
-                }
+            if (keyboardEventHookConfig.pFuncKeyboardEvent != NULL) {
+                //创建一个计时进程
+                CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    //创建一个用于执行用户代码的进程
+                    HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                        __try {
+                            keyboardEventHookConfig.pFuncKeyboardEvent(EventType::KeyDown, *(WPARAM*)lpThreadParameter);
+                        }
+                        __except (EXCEPTION_EXECUTE_HANDLER) {
+                            MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                            MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
+                        }
+                        return 0;
+                        }, lpThreadParameter, 0, NULL);
+                    if (handle != NULL) {
+                        auto ret = WaitForSingleObject(handle, keyboardEventHookConfig.timeout);
+                        if (ret == WAIT_TIMEOUT) {
+                            TerminateThread(handle, 1);
+                            MiniEngine2D::log("Timeout while processing user code.");
+                        }
+                    }
+                    return 0;
+                    }, &wParam, 0, NULL);
             }
             keyStatus[wParam] |= 0x10;
         }
         break;
     }
+    case WM_SYSKEYUP:
+        //合并处理
     case WM_KEYUP: {
         //引擎内部代码
 
@@ -212,82 +319,66 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             lParam = packetMsgParam.second;
             isVK_PACKET = false;
         }
-        if (pFuncKeyboardEvent != NULL) {
-            __try {
-                pFuncKeyboardEvent(EventType::KeyUp, wParam);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER) {
-                MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
-            }
+        if (keyboardEventHookConfig.pFuncKeyboardEvent != NULL) {
+            //创建一个计时进程
+            CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                //创建一个用于执行用户代码的进程
+                HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    __try {
+                        keyboardEventHookConfig.pFuncKeyboardEvent(EventType::KeyUp, *(WPARAM*)lpThreadParameter);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {
+                        MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                        MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
+                    }
+                    return 0;
+                    }, lpThreadParameter, 0, NULL);
+                if (handle != NULL) {
+                    auto ret = WaitForSingleObject(handle, keyboardEventHookConfig.timeout);
+                    if (ret == WAIT_TIMEOUT) {
+                        TerminateThread(handle, 1);
+                        MiniEngine2D::log("Timeout while processing user code.");
+                    }
+                }
+                return 0;
+                }, &wParam, 0, NULL);
         }
         keyStatus[wParam] |= 0x01;
         break;
     }
-    case WM_SYSKEYDOWN: {
-        //引擎内部代码
-
-        //处理用户hook
-        if (wParam == VK_PACKET) {
-            //使用了Unicode 的KeyCode需要转换
-            isVK_PACKET = true;
-        }
-        else {
-            //other
-            if (pFuncKeyboardEvent != NULL) {
-                __try {
-                    pFuncKeyboardEvent(EventType::KeyDown, wParam);
-                }
-                __except (EXCEPTION_EXECUTE_HANDLER) {
-                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
-                }
-            }
-            keyStatus[wParam] |= 0x10;
-        }
-        break;
-    }
-    case WM_SYSKEYUP: {
-        //引擎内部代码
-
-        //处理用户hook
-        if (wParam == VK_PACKET) {
-            //使用了Unicode 的KeyCode需要转换
-            isVK_PACKET = true;
-        }
-        else {
-            //other
-            if (pFuncKeyboardEvent != NULL) {
-                __try {
-                    pFuncKeyboardEvent(EventType::KeyUp, wParam);
-                }
-                __except (EXCEPTION_EXECUTE_HANDLER) {
-                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key up)");
-                }
-            }
-            keyStatus[wParam] |= 0x01;
-        }
-        break;
-    }
     case WM_UNICHAR: {
-        MiniEngine2D::log("WM_UNICHAR %X %X", wParam, lParam);
+        //MiniEngine2D::log("WM_UNICHAR %X %X", wParam, lParam);
         break;
     }
     case WM_CHAR: {
-        //MiniEngine2D::log("WM_CHAR    %X %X", wParam, lParam);
         if (isVK_PACKET) {
             //存储key down消息的参数
             packetMsgParam.first = wParam;
             packetMsgParam.second = lParam;
 
-            if (pFuncKeyboardEvent != NULL) {
-                __try {
-                    pFuncKeyboardEvent(EventType::KeyDown, wParam);
-                }
-                __except (EXCEPTION_EXECUTE_HANDLER) {
-                    MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
-                    MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
-                }
+            if (keyboardEventHookConfig.pFuncKeyboardEvent != NULL) {
+                //创建一个计时进程
+                CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                    //创建一个用于执行用户代码的进程
+                    HANDLE handle = CreateThread(NULL, 0, [](LPVOID lpThreadParameter)->DWORD {
+                        __try {
+                            keyboardEventHookConfig.pFuncKeyboardEvent(EventType::KeyDown, *(WPARAM*)lpThreadParameter);
+                        }
+                        __except (EXCEPTION_EXECUTE_HANDLER) {
+                            MiniEngine2D::log("ExceptionCode:0x%X", GetExceptionCode());
+                            MiniEngine2D::log("An exception occurred in the user-handling keyboard code.(Key down)");
+                        }
+                        return 0;
+                        }, lpThreadParameter, 0, NULL);
+                    if (handle != NULL) {
+                        auto ret = WaitForSingleObject(handle, keyboardEventHookConfig.timeout);
+                        if (ret == WAIT_TIMEOUT) {
+                            TerminateThread(handle, 1);
+                            MiniEngine2D::log("Timeout while processing user code.");
+                        }
+                    }
+                    return 0;
+                    }, &wParam, 0, NULL);
             }
             keyStatus[wParam] |= 0x10;
         }

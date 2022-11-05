@@ -36,6 +36,7 @@ int main()
 	});
 	m.addEventHook([](EventType eventType, int keyCode){
 		MiniEngine2D::log("Keyboard: EventType %d KeyCode %d", eventType, keyCode);
+		//while (1);
 	});
 	//取消注册事件
 	//m.addEventHook((PFuncKeyboardEvent)NULL);
